@@ -31,7 +31,6 @@ class PokemonDetailViewController: UIViewController {
         mainImage.sd_setImage(with: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/\(self.pokemon.pokedexId).png"), placeholderImage: UIImage(named: "Pokeball"))
         currentEvoImage.sd_setImage(with: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/\(self.pokemon.pokedexId).png"), placeholderImage: UIImage(named: "Pokeball"))
         pokemon.downloadPokemonDetail {
-            print("Inside completion handler")
             self.updateUI()
         }
     }
@@ -44,7 +43,16 @@ class PokemonDetailViewController: UIViewController {
         pokedexIdLabel.text = "\(pokemon.pokedexId)"
         heightLabel.text = pokemon.height
         weightLabel.text = pokemon.weight
-        evoLabel.text = pokemon.nextEvoText
+        
+        if pokemon.nextEvoId == "" {
+            evoLabel.text = "No Evolutions"
+            nextEvoImage.isHidden = true
+        } else {
+            nextEvoImage.isHidden = false
+            nextEvoImage.sd_setImage(with: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/\(self.pokemon.nextEvoId).png"), placeholderImage: UIImage(named: "Pokeball"))
+            evoLabel.text = "Next Evolution: \(pokemon.nextEvoName) - LVL \(pokemon.nextEvoLevel)"
+        }
+        
     }
 
     @IBAction func backButtonPressed(_ sender: UIButton) {

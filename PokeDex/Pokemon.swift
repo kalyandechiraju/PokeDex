@@ -20,7 +20,31 @@ class Pokemon {
     private var _weight: String!
     private var _attack: String!
     private var _nextEvoText: String!
+    private var _nextEvoName: String!
+    private var _nextEvoId: String!
+    private var _nextEvoLevel: String!
     private var _pokemonURL: String!
+    
+    var nextEvoName: String {
+        if _nextEvoName == nil {
+            _nextEvoName = ""
+        }
+        return _nextEvoName
+    }
+    
+    var nextEvoId: String {
+        if _nextEvoId == nil {
+            _nextEvoId = ""
+        }
+        return _nextEvoId
+    }
+    
+    var nextEvoLevel: String {
+        if _nextEvoLevel == nil {
+            _nextEvoLevel = ""
+        }
+        return _nextEvoLevel
+    }
     
     var name: String {
         return _name
@@ -127,7 +151,15 @@ class Pokemon {
             if let evolutions = json["evolutions"].array, evolutions.count > 0 {
                 if let nextEvo = evolutions[0]["to"].string {
                     if nextEvo.range(of: "mega") == nil {
-                        
+                        self._nextEvoName = nextEvo
+                        if let uri = evolutions[0]["resource_uri"].string {
+                            self._nextEvoId = uri.replacingOccurrences(of: "/api/v1/pokemon/", with: "").replacingOccurrences(of: "/", with: "")
+                        }
+                        if let evoLvl = evolutions[0]["level"].int {
+                            self._nextEvoLevel = "\(evoLvl)"
+                        } else {
+                            self._nextEvoLevel = ""
+                        }
                     }
                 }
             }
